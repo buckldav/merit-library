@@ -12,3 +12,14 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "url": {"view_name": "api:user-detail", "lookup_field": "username"}
         }
+
+
+# Testing Serializer
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'title',
+            'description',
+            'owner'
+        )
