@@ -35,3 +35,15 @@ python manage.py migrate
 
 How to email: https://www.sitepoint.com/django-send-email/
 "Less Secure App Access" in gmail settings
+
+#### TODO:
+library/views.py
+library/forms.py
+library/templates/email.html
+
+Email form that can schedule when an email is sent.
+
+https://docs.djangoproject.com/en/3.2/topics/forms/
+
+
+schedule email: https://mrprabhatmishra.medium.com/periodic-email-scheduler-in-django-with-celery-beat-72c5b4d0b9d
