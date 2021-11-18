@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
+from library.library.models import Author
+
 User = get_user_model()
 
 
@@ -17,9 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
 # Testing Serializer
 class TestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
+        model = Author
         fields = (
-            'title',
-            'description',
-            'owner'
+            'first_name',
+            'last_name',
+            'image'
         )
