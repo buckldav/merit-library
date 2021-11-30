@@ -4,10 +4,23 @@ from django.conf import settings
 from django.http import HttpResponseRedirect
 from .forms import EmailForm
 from celery import shared_task
+from django_celery_beat.models import CrontabSchedule, PeriodicTask
+# schedule, _ = CrontabSchedule.objects.get_or_create(
+#     minute='1',
+#     hour='*',
+#     day_of_week='*',
+#     day_of_month='*',
+#     month_of_year='*',
+# )
 
+# PeriodicTask.objects.create(
+#     crontab=schedule,
+#     name='Send Lots Of Emails!',
+#     task='library.library.tasks.send_email',
+# )
 # Create your views here.
 
-@shared_task
+
 
 def email_scheduler(request):
     # if this is a POST request we need to process the form data

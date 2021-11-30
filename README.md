@@ -47,3 +47,15 @@ https://docs.djangoproject.com/en/3.2/topics/forms/
 
 
 schedule email: https://mrprabhatmishra.medium.com/periodic-email-scheduler-in-django-with-celery-beat-72c5b4d0b9d
+
+###### You have to run this stuff for tasks to work.
+Run Redis CLI `C:/Program Files/Redis/redis-cli.exe`
+
+Celery Start Workers: https://django-celery-beat.readthedocs.io/en/latest/#example-running-periodic-tasks
+
+```
+celery -A library worker --pool=solo -l info
+celery -A library beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+```
+
+Can't find task library.tasks.send_email
