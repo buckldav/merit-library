@@ -27,12 +27,13 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
+    path("api/test/", TestView.as_view(), name="test"),
     path("api/authors/", AuthorView.as_view(), name="authors"),
-    path("api/deweydecimal/", DeweyDecimalView.as_view(), name="deweydecimal"),
-    path("api/student/", StudentView.as_view(), name="student"),
-    path("api/teacher/", TeacherView.as_view(), name="teacher"),
-    path("api/book/", BookView.as_view(), name="book"),
-    path("api/checkout/", CheckoutView.as_view(), name="checkout"),
+    path("api/deweydecimals/", DeweyDecimalView.as_view(), name="deweydecimal"),
+    path("api/students/", StudentView.as_view(), name="student"),
+    path("api/teachers/", TeacherView.as_view(), name="teacher"),
+    path("api/books/", BookView.as_view(), name="book"),
+    path("api/checkouts/", CheckoutView.as_view(), name="checkout"),
 ]
 
 if settings.DEBUG:

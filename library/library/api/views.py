@@ -10,8 +10,15 @@ from library.library.models import *
 
 class TestView(generics.ListAPIView):
     serializer_class = TestSerializer
-    queryset = Book.objects.all()
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Book.objects.all()
+        title = self.request.query_params.get('title')
+        if title is not None:
+            queryset = queryset.filter(title__iexact=title)
+        return queryset
+
 
 class AuthorView(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
@@ -25,20 +32,74 @@ class DeweyDecimalView(generics.ListCreateAPIView, generics.UpdateAPIView):
 
 class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = StudentSerializer
-    queryset = Student.objects.all()
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Student.objects.all()
+        first_name = self.request.query_params.get('first_name')
+        last_name = self.request.query_params.get('last_name')
+        idnum = self.request.query_params.get('id')
+        email = self.request.query_params.get('email')
+        if first_name is not None:
+            queryset = queryset.filter(first_name__icontains=first_name)
+        if last_name is not None:
+            queryset = queryset.filter(last_name__icontains=last_name)
+        if idnum is not None:
+            queryset = queryset.filter(id__iexact=idnum)
+        if email is not None:
+            queryset = queryset.filter(email__icontains=email)
+        return queryset
 
 class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = TeacherSerializer
-    queryset = Teacher.objects.all()
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Teacher.objects.all()
+        first_name = self.request.query_params.get('first_name')
+        last_name = self.request.query_params.get('last_name')
+        email = self.request.query_params.get('email')
+        room_number = self.request.query_params.get('room_number')
+        if first_name is not None:
+            queryset = queryset.filter(first_name__icontains=first_name)
+        if last_name is not None:
+            queryset = queryset.filter(last_name__icontains=last_name)
+        if email is not None:
+            queryset = queryset.filter(email__icontains=email)
+        if room_number is not None:
+            queryset = queryset.filter(room_number__iexact=room_number)
+        return queryset
 
 class BookView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = BookSerializer
-    queryset = Book.objects.all()
     permission_classes = [permissions.AllowAny]
+    
+    def get_queryset(self):
+        queryset = Book.objects.all()
+        title = self.request.query_params.get('title')
+        author = self.request.query_params.get('author')
+        barcode = self.request.query_params.get('barcode')
+        dewey_decimal = self.request.query_params.get('dewey_decimal')
+        if title is not None:
+            queryset = queryset.filter(title__icontains=title)
+        if author is not None:
+            queryset = queryset.filter(author__id=int(author))
+        if barcode is not None:
+            queryset = queryset.filter(barcode__iexact=barcode)
+        if dewey_decimal is not None:
+            queryset = queryset.filter(dewey_decimal__id=int(dewey_decimal))
+        return queryset
 
 class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
     serializer_class = CheckoutSerializer
-    queryset = Checkout.objects.all()
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        queryset = Checkout.objects.all()
+        book = self.request.query_params.get('book')
+        student = self.request.query_params.get('student')
+        if book is not None:
+            queryset = queryset.filter(book__title__icontains=book)
+        if student is not None:
+            queryset = queryset.filter(student__id=int(student))
+        return queryset
