@@ -39,14 +39,15 @@ class Teacher(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 class Book(models.Model):
-    title = models.CharField(max_length=60)
-    barcode = models.IntegerField(primary_key=True)
-    author = models.ForeignKey(to=Author, on_delete=models.CASCADE)
-    dewey_decimal = models.ForeignKey(to=DeweyDecimal, on_delete=models.CASCADE)
-    copies = models.IntegerField()
-    teacher = models.ForeignKey(to=Teacher, on_delete=models.CASCADE, blank=True)
-    description = models.TextField()
-    picture = models.ImageField(blank=True)
+    title = models.CharField(max_length=60, editable=False)
+    isbn = models.CharField(primary_key=True, max_length=13)
+    author = models.ForeignKey(to=Author, on_delete=models.CASCADE, editable=False)
+    call_number = models.ForeignKey(to=DeweyDecimal, on_delete=models.CASCADE)
+    copies = models.IntegerField(default=1)
+    teacher = models.ForeignKey(to=Teacher, on_delete=models.CASCADE, blank=True, null=True)
+    description = models.TextField(blank=True)
+    image = models.URLField(blank=True, null=True)
+    pages = models.IntegerField(editable=False, default=0)
 
 
     
