@@ -59,3 +59,14 @@ celery -A library beat -l info --scheduler django_celery_beat.schedulers:Databas
 ```
 
 Can't find task library.tasks.send_email
+make a webscraper ---->  https://realpython.com/beautiful-soup-web-scraper-python/
+site to scrape ---->  https://isbnsearch.org/isbn/ 
+
+
+https://openlibrary.org/isbn/9780765326355.json
+
+https://openlibrary.org/api/books.json?bibkeys=ISBN:9780765326355&jscmd=details&format=json
+
+https://openlibrary.org/api/books.json?bibkeys=ISBN:9780765326355&jscmd=data&format=json
+
+put web scraper into admin
