@@ -8,6 +8,7 @@ from library.library.models import *
 
 # Create your views here.
 
+
 class TestView(generics.ListAPIView):
     serializer_class = TestSerializer
     permission_classes = [permissions.AllowAny]
@@ -25,10 +26,6 @@ class AuthorView(generics.ListCreateAPIView):
     queryset = Author.objects.all
     permission_classes = [permissions.AllowAny]
 
-class DeweyDecimalView(generics.ListCreateAPIView, generics.UpdateAPIView):
-    serializer_class = DeweyDecimalSerializer
-    queryset = DeweyDecimal.objects.all()
-    permission_classes = [permissions.AllowAny]
 
 class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = StudentSerializer
@@ -50,6 +47,7 @@ class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.D
             queryset = queryset.filter(email__icontains=email)
         return queryset
 
+
 class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = TeacherSerializer
     permission_classes = [permissions.AllowAny]
@@ -70,25 +68,27 @@ class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.D
             queryset = queryset.filter(room_number__iexact=room_number)
         return queryset
 
+
 class BookView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [permissions.AllowAny]
-    
+
     def get_queryset(self):
         queryset = Book.objects.all()
         title = self.request.query_params.get('title')
         author = self.request.query_params.get('author')
         barcode = self.request.query_params.get('barcode')
-        dewey_decimal = self.request.query_params.get('dewey_decimal')
+        call_number = self.request.query_params.get('call_number')
         if title is not None:
             queryset = queryset.filter(title__icontains=title)
         if author is not None:
             queryset = queryset.filter(author__id=int(author))
         if barcode is not None:
             queryset = queryset.filter(barcode__iexact=barcode)
-        if dewey_decimal is not None:
-            queryset = queryset.filter(dewey_decimal__id=int(dewey_decimal))
+        if call_number is not None:
+            queryset = queryset.filter(call_number__id=int(call_number))
         return queryset
+
 
 class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
     serializer_class = CheckoutSerializer

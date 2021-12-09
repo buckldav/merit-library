@@ -1,32 +1,36 @@
 from django.contrib import admin
-from library.library.models import Author, Book, Checkout, DeweyDecimal, Student, Teacher
+from library.library.models import Author, Book, Checkout, Student, Teacher
 import requests
 import json
+from stdnum.isbn import to_isbn10
 
 # Register your models here.
- 
+
 admin.site.register(Author)
-admin.site.register(DeweyDecimal)
 admin.site.register(Student)
-# admin.site.register(Book)
 admin.site.register(Teacher)
 admin.site.register(Checkout)
+
 
 class BookAdmin(admin.ModelAdmin):
     fields = ['isbn', 'call_number']
 
-    def add_view(self,request,extra_content=None):
+    def add_view(self, request, extra_content=None):
         self.fields = ["isbn", "call_number"]
-        return super(BookAdmin,self).add_view(request)
+        return super(BookAdmin, self).add_view(request)
 
-    def change_view(self,request,object_id,extra_content=None):
+    def change_view(self, request, object_id, extra_content=None):
         self.fields = ["author", "title", "call_number", "copies", "image", "pages"]
         self.readonly_fields = ["author", "title", "pages"]
-        return super(BookAdmin,self).change_view(request,object_id)
+        return super(BookAdmin, self).change_view(request, object_id)
 
     def save_model(self, request, obj, form, change):
-        
-        ISBN = form.cleaned_data["isbn"] #"0765326353"
+        """The openlibrary likes ISBN 10s"""
+
+        ISBN = form.cleaned_data["isbn"]  # "0765326353"
+        if len(ISBN) == 13:
+            ISBN = ISBN[0:3] + "-" + ISBN[3:]
+            ISBN = to_isbn10(ISBN).strip("-")
 
         URL = f"https://openlibrary.org/api/books.json?jscmd=data&bibkeys=ISBN:{ISBN}"
         page = requests.get(URL)
@@ -46,5 +50,6 @@ class BookAdmin(admin.ModelAdmin):
         obj.author = author
 
         return super(BookAdmin, self).save_model(request, obj, form, change)
+
 
 admin.site.register(Book, BookAdmin)
