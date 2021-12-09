@@ -6,6 +6,7 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from library.library.api.views import *
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
@@ -17,6 +18,7 @@ urlpatterns = [
     path("users/", include("library.users.urls", namespace="users")),
     # path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # API URLS
@@ -25,6 +27,13 @@ urlpatterns += [
     path("api/", include("config.api_router")),
     # DRF auth token
     path("auth-token/", obtain_auth_token),
+    path("api/test/", TestView.as_view(), name="test"),
+    path("api/authors/", AuthorView.as_view(), name="authors"),
+    path("api/deweydecimals/", DeweyDecimalView.as_view(), name="deweydecimal"),
+    path("api/students/", StudentView.as_view(), name="student"),
+    path("api/teachers/", TeacherView.as_view(), name="teacher"),
+    path("api/books/", BookView.as_view(), name="book"),
+    path("api/checkouts/", CheckoutView.as_view(), name="checkout"),
 ]
 
 if settings.DEBUG:
