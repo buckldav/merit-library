@@ -33,5 +33,14 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-How to email: https://www.sitepoint.com/django-send-email/
-"Less Secure App Access" in gmail settings
+make a webscraper ---->  https://realpython.com/beautiful-soup-web-scraper-python/
+site to scrape ---->  https://isbnsearch.org/isbn/ 
+
+
+https://openlibrary.org/isbn/9780765326355.json
+
+https://openlibrary.org/api/books.json?bibkeys=ISBN:9780765326355&jscmd=details&format=json
+
+https://openlibrary.org/api/books.json?bibkeys=ISBN:9780765326355&jscmd=data&format=json
+
+put web scraper into admin
