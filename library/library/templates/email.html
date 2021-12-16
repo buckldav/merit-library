@@ -3,7 +3,7 @@
 {% block content %}
 
 
-<form action="/email-test/" method="post">
+<form action="/library/email-test/" method="post">
 {% csrf_token %}
     <label for="your_email">Your email: </label>
     <input id="your_email" type="email" name="your_email" value="{{ current_email }}">

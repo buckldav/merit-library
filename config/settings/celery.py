@@ -6,7 +6,7 @@ from celery.schedules import crontab
 
 # Set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.local')
-app = Celery('library')
+app = Celery('config')
 app.conf.enable_utc=False
 app.conf.update(timezone='US/Mountain')
 # Using a string here means the worker doesn't have to serialize
@@ -29,3 +29,4 @@ app.config_from_object(settings, namespace='CELERY')
 
 # def debug_task(self):
 #     print(f'Request: {self.request!r}')
+ 

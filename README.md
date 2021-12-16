@@ -70,3 +70,15 @@ https://openlibrary.org/api/books.json?bibkeys=ISBN:9780765326355&jscmd=details&
 https://openlibrary.org/api/books.json?bibkeys=ISBN:9780765326355&jscmd=data&format=json
 
 put web scraper into admin
+
+use celery |
+           |
+          \ /
+           '
+https://www.youtube.com/watch?v=b-6mEAr1m-A
+
+https://github.com/PrettyPrinted/youtube_video_code/tree/master/2019/09/08/Sending%20Emails%20in%20Django%20With%20Celery/django_email_celery/django_email_celery/django_email_celery  
+
+
+
+http://127.0.0.1:8000/library/email-test/

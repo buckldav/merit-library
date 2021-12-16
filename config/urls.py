@@ -5,7 +5,6 @@ from django.urls import include, path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
-from library.library.views import email_scheduler
 from library.library.api.views import *
 
 
@@ -19,7 +18,7 @@ urlpatterns = [
     # User management
     path("users/", include("library.users.urls", namespace="users")),
     # path("accounts/", include("allauth.urls")),
-    path("email-test/", email_scheduler, name="email-test")
+    path("library/", include("library.library.urls"))
     # Your stuff: custom urls includes go here
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -63,3 +62,6 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+
+
