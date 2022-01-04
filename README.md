@@ -5,8 +5,7 @@
 ```bash
 python -m venv env
 source env/Scripts/activate
-pip install django
-django-admin startproject <project-name> .
+pip install -r requirements/local.txt
 ```
 #### run server
 ```bash
