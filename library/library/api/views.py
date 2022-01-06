@@ -1,6 +1,8 @@
 from django.db.models import query
 from django.shortcuts import render
 
+from drf_yasg.views import get_schema_view
+
 from rest_framework import generics, permissions
 
 from .serializers import *
@@ -103,3 +105,16 @@ class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
         if student is not None:
             queryset = queryset.filter(student__id=int(student))
         return queryset
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Snippets API",
+      default_version='v1',
+      description="Test description",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="contact@snippets.local"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)

@@ -6,6 +6,8 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 from library.library.api.views import *
+from rest_framework import permissions
+from drf_yasg import openapi
 
 
 urlpatterns = [
@@ -21,6 +23,15 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#drf_yasg
+
+urlpatterns = [
+   url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+   url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+   url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+   ...
+]
 
 # API URLS
 urlpatterns += [
