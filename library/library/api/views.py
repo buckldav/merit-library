@@ -11,7 +11,7 @@ from library.library.models import *
 
 class TestView(generics.ListAPIView):
     serializer_class = TestSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Book.objects.all()
@@ -24,12 +24,12 @@ class TestView(generics.ListAPIView):
 class AuthorView(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
     queryset = Author.objects.all
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = StudentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Student.objects.all()
@@ -50,7 +50,7 @@ class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.D
 
 class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = TeacherSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Teacher.objects.all()
@@ -71,7 +71,7 @@ class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.D
 
 class BookView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Book.objects.all()
@@ -92,7 +92,7 @@ class BookView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.Dest
 
 class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
     serializer_class = CheckoutSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Checkout.objects.all()

@@ -27,7 +27,7 @@ urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # DRF auth token
-    path("auth-token/", obtain_auth_token),
+    path("api/auth-token/", obtain_auth_token, name='obtain-token'),
     path("api/test/", TestView.as_view(), name="test"),
     path("api/authors/", AuthorView.as_view(), name="authors"),
     path("api/students/", StudentView.as_view(), name="student"),
