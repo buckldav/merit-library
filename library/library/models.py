@@ -46,69 +46,15 @@ class Book(models.Model):
         return self.title
 
 
-
-
-
-# class CheckoutManager(models.Manager):
-#     def save(self, **obj_data):
-        
-#         if not 'due_date' in obj_data or not obj_data['due_date']:
-#             # 3 weeks
-            
-#             obj_data['due_date'] = obj_data['checkout_time'] + datetime.timedelta(21)
-
-#         obj_data['email_time'] = obj_data['due_date'].total_seconds() - obj_data['checkout_time'].total_seconds()
-#         return super().save(**obj_data) 
-
-
-
-
-
 class Checkout(models.Model):
     book = models.ForeignKey(to=Book, on_delete=models.CASCADE)
     student = models.ForeignKey(to=Student, on_delete=models.CASCADE)
     checkout_time = models.DateTimeField(auto_now_add=True)
     due_date = models.DateTimeField(blank=True, null=True)
 
-    email_time = models.IntegerField(blank=True, null=True) # seconds
-
-    def save(self, *args, **kwargs):
-        if not self.checkout_time:
-            self.checkout_time = timezone.now()
-        if not self.due_date:
-            # 3 weeks
-            self.due_date = self.checkout_time + datetime.timedelta(21)
-
-        self.email_time = self.due_date.timestamp() - self.checkout_time.timestamp()
-
-        super(Checkout, self).save(*args, **kwargs)
-
     def __str__(self):
-        return f"{self.student} {self.book} {self.checkout_time}"
+        return f'{self.student.last_name}, {self.student.first_name}; {self.book.__str__()}, Due: {self.due_date}'
 
-    # troubleshoot code ^
-    # TODO add if statement to views
+    
 
-
-
-
-
-
-
-
-
-# class MyModelManager(models.Manager):
-#     def create(self, **obj_data):
-#         # Do some extra stuff here on the submitted data before saving...
-#         # For example...
-#         obj_data['my_field'] = my_computed_value(obj_data['my_other_field'])
-
-#         # Now call the super method which does the actual creation
-#         return super().create(**obj_data) # Python 3 syntax!!
-
-# class MyModel(models.model):
-#     # An example model
-#     my_field = models.CharField(max_length=250)
-#     my_other_field = models.CharField(max_length=250)
-
-#     objects = MyModelManager()
+   

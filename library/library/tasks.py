@@ -16,13 +16,9 @@ def send_overdue_email(self, checkout):
             print("email!")
             checkout = Checkout.objects.get(id=checkout.id)
             recipient = checkout.student.email #recipient = student email 
-            send_mail('A cool subject', 'A stunning message', settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
+            send_mail('Book overdue at Merit Library', f'{checkout.book.title} is overdue. Please turn it in.', settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
     except:
         # the book was checked in
         pass
 
 
-# def send_email():
-#     wait(300)
-#     send_mail('A cool subject', 'A stunning message', settings.EMAIL_HOST_USER, ["bryson.day@meritknights.com"], fail_silently=False)
-#     return None

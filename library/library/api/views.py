@@ -117,19 +117,7 @@ class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
         checkout = serializer.save()
         send_overdue_email(checkout)
 
-        # wait the seconds until due date
-        # wait((checkout.due_date - checkout.checkout_time).total_seconds())
-
-        # # try to get checkout object from db if exists
-        # try:
-        #     checkout = Checkout.objects.get(id=checkout.id)
-        # #     recipient = checkout.student.email #recipient = student email 
-        # #     send_mail('A cool subject', 'A stunning message', settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
-            
-        # except:
-        #     result.abort()
-        #     # the book was checked in
-        #     pass
+       
 
             
 
