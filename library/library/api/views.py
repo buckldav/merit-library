@@ -1,10 +1,19 @@
 from django.db.models import query
 from django.shortcuts import render
 
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 
 from .serializers import *
 from library.library.models import *
+
+
+from django.core.mail import send_mail
+from library.library.forms import EmailForm
+from library.library.tasks import send_overdue_email
+from django.conf import settings
+from django.shortcuts import render
+
 
 # Create your views here.
 
@@ -103,3 +112,24 @@ class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
         if student is not None:
             queryset = queryset.filter(student__id=int(student))
         return queryset
+
+    def perform_create(self, serializer):
+        checkout = serializer.save()
+        send_overdue_email(checkout)
+
+        # wait the seconds until due date
+        # wait((checkout.due_date - checkout.checkout_time).total_seconds())
+
+        # # try to get checkout object from db if exists
+        # try:
+        #     checkout = Checkout.objects.get(id=checkout.id)
+        # #     recipient = checkout.student.email #recipient = student email 
+        # #     send_mail('A cool subject', 'A stunning message', settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
+            
+        # except:
+        #     result.abort()
+        #     # the book was checked in
+        #     pass
+
+            
+

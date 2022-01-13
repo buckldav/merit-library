@@ -1,12 +1,12 @@
 from django.shortcuts import render
 from django.core.mail import send_mail
 from django.conf import settings
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse
+# from django.http import HttpResponseRedirect
+# from django.http import HttpResponse
 from .forms import EmailForm
-from celery import shared_task
-from django_celery_beat.models import CrontabSchedule, PeriodicTask
-from .tasks import wait
+# from celery import shared_task
+# from django_celery_beat.models import CrontabSchedule, PeriodicTask
+# from .tasks import wait
 
 # schedule, _ = CrontabSchedule.objects.get_or_create(
 #     minute='1',
@@ -32,7 +32,9 @@ def email_scheduler(request):
         form = EmailForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            wait(30)
+            
+            # wait(30)
+            # if not checked in:   
             recipient = form.data["your_email"]
             send_mail('A cool subject', 'A stunning message', settings.EMAIL_HOST_USER, [recipient], fail_silently=False)
             # ...
