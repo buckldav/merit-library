@@ -6,6 +6,9 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 from library.library.api.views import *
+from rest_framework import permissions
+from drf_yasg import openapi
+from django.contrib.auth.views import LoginView
 
 
 urlpatterns = [
@@ -18,17 +21,22 @@ urlpatterns = [
     # User management
     path("users/", include("library.users.urls", namespace="users")),
     # path("accounts/", include("allauth.urls")),
-    path("library/", include("library.library.urls"))
+    path("library/", include("library.library.urls")),
+    path("login/", LoginView.as_view(), name="login"),
     # Your stuff: custom urls includes go here
+    #path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    #path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
 
 # API URLS
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
     # DRF auth token
-    path("auth-token/", obtain_auth_token),
+    path("api/auth-token/", obtain_auth_token, name='obtain-token'),
     path("api/test/", TestView.as_view(), name="test"),
     path("api/authors/", AuthorView.as_view(), name="authors"),
     path("api/students/", StudentView.as_view(), name="student"),
@@ -62,6 +70,3 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
-
-
-

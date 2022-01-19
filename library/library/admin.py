@@ -43,7 +43,7 @@ class BookAdmin(admin.ModelAdmin):
             obj.pages = data[f"ISBN:{ISBN}"]["number_of_pages"]
         obj.isbn = ISBN
         obj.call_number = form.cleaned_data["call_number"]
-        author = Author.objects.create(
+        author = Author.objects.get_or_create(
             first_name=" ".join(data[f"ISBN:{ISBN}"]["authors"][0]["name"].split()[0:-1]),
             last_name=data[f"ISBN:{ISBN}"]["authors"][0]["name"].split()[-1]
         )

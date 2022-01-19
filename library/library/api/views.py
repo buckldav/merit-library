@@ -1,11 +1,17 @@
 from django.db.models import query
 from django.shortcuts import render
 
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
 from .serializers import *
 from library.library.models import *
+import requests
+import json
+from stdnum.isbn import to_isbn10
 
 
 from django.core.mail import send_mail
@@ -20,7 +26,7 @@ from django.shortcuts import render
 
 class TestView(generics.ListAPIView):
     serializer_class = TestSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAdminUser]
 
     def get_queryset(self):
         queryset = Book.objects.all()
@@ -32,13 +38,13 @@ class TestView(generics.ListAPIView):
 
 class AuthorView(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
-    queryset = Author.objects.all
-    permission_classes = [permissions.AllowAny]
+    queryset = Author.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = StudentSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Student.objects.all()
@@ -59,7 +65,7 @@ class StudentView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.D
 
 class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = TeacherSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Teacher.objects.all()
@@ -80,7 +86,7 @@ class TeacherView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.D
 
 class BookView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = BookSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Book.objects.all()
@@ -98,10 +104,42 @@ class BookView(generics.ListCreateAPIView, generics.UpdateAPIView, generics.Dest
             queryset = queryset.filter(call_number__id=int(call_number))
         return queryset
 
+    def create(self, request, *args, **kwargs):
+        """The openlibrary likes ISBN 10s"""
+
+        ISBN = request.data["isbn"]  # "0765326353"
+        if len(ISBN) == 13:
+            ISBN = ISBN[0:3] + "-" + ISBN[3:]
+            ISBN = to_isbn10(ISBN).strip("-")
+
+        URL = f"https://openlibrary.org/api/books.json?jscmd=data&bibkeys=ISBN:{ISBN}"
+        page = requests.get(URL)
+        data = json.loads(page.content.decode("utf-8"))
+
+        obj = {}
+        obj["title"] = data[f"ISBN:{ISBN}"]["title"]
+        if "cover" in data[f"ISBN:{ISBN}"]:
+            obj["image"] = data[f"ISBN:{ISBN}"]["cover"]["medium"]
+        if "number_of_pages" in data[f"ISBN:{ISBN}"]:
+            obj["pages"] = data[f"ISBN:{ISBN}"]["number_of_pages"]
+        obj["isbn"] = ISBN
+        obj["call_number"] = request.data["call_number"]
+        author = Author.objects.get_or_create(
+            first_name=" ".join(data[f"ISBN:{ISBN}"]["authors"][0]["name"].split()[0:-1]),
+            last_name=data[f"ISBN:{ISBN}"]["authors"][0]["name"].split()[-1]
+        )
+        obj["author"] = author[0].id
+        print(obj)
+        serializer = BookSerializer(data=obj)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
     serializer_class = CheckoutSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = Checkout.objects.all()
@@ -113,11 +151,16 @@ class CheckoutView(generics.ListCreateAPIView, generics.DestroyAPIView):
             queryset = queryset.filter(student__id=int(student))
         return queryset
 
-    def perform_create(self, serializer):
-        checkout = serializer.save()
-        send_overdue_email(checkout)
 
-       
-
-            
-
+schema_view = get_schema_view(
+    openapi.Info(
+        title="Snippets API",
+        default_version='v1',
+        description="Test description",
+        terms_of_service="https://www.google.com/policies/terms/",
+        contact=openapi.Contact(email="contact@snippets.local"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
